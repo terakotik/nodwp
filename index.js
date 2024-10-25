@@ -110,11 +110,12 @@ app.listen(3000, () => {
                         }));
 
                         // Отправляем вебхук с данными ответа
-                  await axios.post('https://nodwp-terakotiks-projects.vercel.app/webhook', {
+ await axios.post('https://nodwp-terakotiks-projects.vercel.app/api/webhook', {
     userId,
     userMessage,
     answer,
 });
+
 
                     } catch (error) {
                         // Если не удалось найти пользователя, пробуем обновить список диалогов
