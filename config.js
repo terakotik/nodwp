@@ -1,6 +1,6 @@
 // Файл: config.js
 
-const apiId = 23257126;
+const apiId = 23257126; // Оставьте как число, без кавычек
 const apiHash = 'a356e34ce15aa0a5bbefb59f18474d3d';
 const phoneNumber = '+905518535675';
 const openAiApiKey = process.env.OPENAI_API_KEY;
