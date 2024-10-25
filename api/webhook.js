@@ -1,3 +1,12 @@
+import { Configuration, OpenAIApi } from 'openai';
+import { apiKey } from '../../config'; // Убедитесь, что путь до config файла верный
+
+// Настройка OpenAI API
+const configuration = new Configuration({
+    apiKey: apiKey,
+});
+const openai = new OpenAIApi(configuration);
+
 export default async (req, res) => {
     if (req.method === 'POST') {
         const { userId, userMessage } = req.body;
