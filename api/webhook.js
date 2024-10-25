@@ -1,13 +1,12 @@
+// /api/webhook.js
 import { Configuration, OpenAIApi } from 'openai';
-import { apiKey } from '../../config'; // Убедитесь, что путь до config файла верный
 
-// Настройка OpenAI API
 const configuration = new Configuration({
-    apiKey: apiKey,
+    apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
 
-export default async (req, res) => {
+export default async function handler(req, res) {
     if (req.method === 'POST') {
         const { userId, userMessage } = req.body;
 
@@ -29,4 +28,4 @@ export default async (req, res) => {
     } else {
         res.status(404).send('Not found');
     }
-};
+}
