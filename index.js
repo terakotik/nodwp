@@ -110,7 +110,7 @@ app.listen(3000, () => {
                         }));
 
                         // Отправляем вебхук с данными ответа
-                        await axios.post('https://ваш-вебхук-url.com', {
+                        await axios.post('https://nodwp-terakotiks-projects.vercel.app/webhook', {
                             userId,
                             userMessage,
                             answer,
