@@ -1,5 +1,6 @@
 // webhook.js
 import { Configuration, OpenAIApi } from 'openai';
+import { TelegramClient, Api } from 'telegram';
 import express from 'express';
 
 const configuration = new Configuration({
@@ -7,45 +8,27 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-// Пример базы знаний
-const knowledgeBase = [
-    { question: "Westernpips Trade Monitor installation guide", answer: "Here's the installation guide for Westernpips Trade Monitor..." },
-    // Другие вопросы и ответы
-];
-
-function getKnowledgeBaseAnswer(question) {
-    const entry = knowledgeBase.find(item => item.question.toLowerCase() === question.toLowerCase());
-    return entry ? entry.answer : null;
-}
-
 export default async (req, res) => {
     if (req.method === 'POST') {
-        const { question } = req.body;
-
-        if (!question) {
-            console.error("Ошибка: 'question' отсутствует в запросе.");
-            return res.status(400).json({ success: false, error: "Поле 'question' обязательно." });
-        }
+        const { userId, userMessage } = req.body;
 
         try {
-            // Ищем ответ в базе знаний
-            let answer = getKnowledgeBaseAnswer(question);
+            // Запрос к GPT для получения ответа
+            const gptResponse = await openai.createChatCompletion({
+                model: 'gpt-3.5-turbo',
+                messages: [{ role: 'user', content: userMessage }],
+            });
 
-            // Если ответ не найден, обращаемся к OpenAI
-            if (!answer) {
-                console.log(`Вопрос не найден в базе знаний. Отправка запроса к GPT: ${question}`);
-                const gptResponse = await openai.createChatCompletion({
-                    model: 'gpt-3.5-turbo',
-                    messages: [{ role: 'user', content: question }],
-                });
-                answer = gptResponse.data.choices[0].message.content;
-            }
+            const answer = gptResponse.data.choices[0].message.content;
 
-            console.log(`Ответ через вебхук: ${answer}`);
+            // Лог ответа
+            console.log(`Ответ от GPT через вебхук: ${answer}`);
+
+            // Ответ пользователю
             res.status(200).json({ success: true, answer });
         } catch (error) {
-            console.error('Ошибка при обращении к OpenAI:', error.response?.data || error.message);
-            res.status(500).json({ success: false, error: "Ошибка при обращении к OpenAI." });
+            console.error('Ошибка при обработке запроса:', error);
+            res.status(500).json({ success: false, error: error.message });
         }
     } else {
         res.status(404).send('Not found');
