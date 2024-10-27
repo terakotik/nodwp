@@ -46,6 +46,6 @@ export default async function handler(req, res) {
             res.status(500).json({ success: false, error: error.message, status: "👾 Webhook не работает. Лог ошибки: " + error.message });
         }
     } else {
-        res.status(404).send('Not found');
+        res.status(404).send('Not found НЕ ПАШЕТ');
     }
 }
